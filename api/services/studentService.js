@@ -1,4 +1,5 @@
 const student = require("../models/studentModel");
+const { decryptPassword } = require("../utils/common");
 
 module.exports = {
   studentSignUpUser,
@@ -53,10 +54,11 @@ async function studentSigninUser(payload) {
       if (!isEmailExist) {
         return reject({ message: "Email doesn't exist!" });
       } else {
-        if(isEmailExist?.password === payload.password){
-          return resolve({message: "Login success!"})
-        }else{
-          return reject({message: "Incorrect password"})
+        const decryptPayloadPassword = decryptPassword(payload.password);
+        if (isEmailExist?.password === decryptPayloadPassword) {
+          return resolve({ message: "Login success!" });
+        } else {
+          return reject({ message: "Incorrect password" });
         }
       }
     } catch (err) {}
