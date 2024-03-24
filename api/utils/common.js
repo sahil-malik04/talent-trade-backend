@@ -6,6 +6,16 @@ const decryptPassword = (password) => {
   return originalText;
 };
 
+const checkEmailExist = async (key, value) => {
+  const result = await key.findOne({
+    where: {
+      email: value,
+    },
+  });
+  return result;
+};
+
 module.exports = {
   decryptPassword,
+  checkEmailExist,
 };

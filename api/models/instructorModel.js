@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 
-const student = sequelize.define("students", {
+const instructor = sequelize.define("instructors", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -23,24 +23,20 @@ const student = sequelize.define("students", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  gender: {
+    type: DataTypes.ENUM("male", "female", "other"),
+    allowNull: false,
+  },
+  YOE: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
   industry: {
     type: DataTypes.JSON,
     allowNull: false,
   },
-  branch: {
+  AOE: {
     type: DataTypes.JSON,
-    allowNull: false,
-  },
-  preferredLearning: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  preferredTimeFrom: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  preferredTimeTo: {
-    type: DataTypes.STRING,
     allowNull: false,
   },
   role: {
@@ -49,12 +45,11 @@ const student = sequelize.define("students", {
   }
 });
 
-// sequelize.sync()
-//   .then(() => {
-//     console.log('Students table created successfully.');
+// sequelize.sync({force: false}).then(() => {
+//     console.log('instructor table created successfully.');
 //   })
 //   .catch(err => {
 //     console.error('Error creating students table:', err);
 //   });
 
-module.exports = student;
+module.exports = instructor;

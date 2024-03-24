@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors")
 const routes = require("./api/routes");
 const { testConnection } = require("./api/config/db");
+const { instructorModel } = require("./api/models/instructorModel");
 
 testConnection();
 
