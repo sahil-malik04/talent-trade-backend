@@ -1,8 +1,10 @@
 const CryptoJS = require("crypto-js");
-const secret = process.env.CRYPTOSECRET;
+const cryptoSecret = process.env.CRYPTOSECRET;
+const jwtSecret = process.env.JWTSECRET;
+const jwt = require("jsonwebtoken");
 
 const decryptData = (data) => {
-  var bytes = CryptoJS.AES.decrypt(data, secret);
+  var bytes = CryptoJS.AES.decrypt(data, cryptoSecret);
   var originalText = bytes.toString(CryptoJS.enc.Utf8);
   return originalText;
 };
@@ -16,7 +18,25 @@ const checkEmailExist = async (key, value) => {
   return result;
 };
 
+const generateToken = (data, duration) => {
+  return new Promise(function (resolve, reject) {
+    try {
+      let token;
+      if (duration) {
+        token = jwt.sign(data, jwtSecret, { expiresIn: duration });
+        return resolve(token);
+      } else {
+        token = jwt.sign(data, jwtSecret);
+        return resolve(token);
+      }
+    } catch (err) {
+      return reject(err);
+    }
+  });
+};
+
 module.exports = {
   decryptData,
   checkEmailExist,
+  generateToken
 };

@@ -1,6 +1,10 @@
 const instructor = require("../models/instructorModel");
 const student = require("../models/studentModel");
-const { decryptData, checkEmailExist } = require("../utils/common");
+const {
+  decryptData,
+  checkEmailExist,
+  generateToken,
+} = require("../utils/common");
 const { mailTransporter } = require("../utils/mailTransporter");
 
 module.exports = {
@@ -89,15 +93,35 @@ async function signInUser(payload) {
         return reject({ message: "Email doesn't exist!" });
       } else {
         const decryptPayloadPassword = decryptData(payload.password);
+        let data;
         let existPassword;
         if (isSEmailExist) {
           existPassword = isSEmailExist.password;
+          data = {
+            fullName: isSEmailExist?.firstName + "" + isSEmailExist?.lastName,
+            email: isSEmailExist?.email,
+            industry: isSEmailExist.industry,
+            branch: isSEmailExist?.branch,
+            preferredLearning: isSEmailExist?.preferredLearning,
+            role: isSEmailExist?.role,
+          };
         } else {
           existPassword = isIEmailExist.password;
+          data = {
+            fullName: isIEmailExist?.firstName + "" + isIEmailExist?.lastName,
+            email: isIEmailExist?.email,
+            industry: isIEmailExist.industry,
+            branch: isIEmailExist?.AEO,
+            role: isIEmailExist?.role,
+          };
         }
-        const decryptExistingPassword = decryptData(existPassword)
+        const decryptExistingPassword = decryptData(existPassword);
         if (decryptExistingPassword === decryptPayloadPassword) {
-          return resolve({ message: "Login success!" });
+          const token = await generateToken(data);
+          if (token) {
+            data.token = token;
+          }
+          return resolve({ message: "Login success!", data });
         } else {
           return reject({ message: "Incorrect password" });
         }
