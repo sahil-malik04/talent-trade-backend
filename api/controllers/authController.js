@@ -1,17 +1,17 @@
 const {
-  studentSigninUser,
   instructorSignupUser,
   studentSignUpUser,
   forgotPasswordUser,
   setNewPasswordUser,
+  signInUser,
 } = require("../services/authService");
 
 module.exports = {
   studentSignUp,
   instructorSignup,
-  studentSignin,
+  signIn,
   forgotPassword,
-  setNewPassword
+  setNewPassword,
 };
 
 async function studentSignUp(req, res) {
@@ -34,10 +34,10 @@ async function instructorSignup(req, res) {
   }
 }
 
-async function studentSignin(req, res) {
+async function signIn(req, res) {
   try {
     const payload = req.body;
-    const result = await studentSigninUser(payload);
+    const result = await signInUser(payload);
     res.status(200).json(result);
   } catch (err) {
     res.status(400).json(err);

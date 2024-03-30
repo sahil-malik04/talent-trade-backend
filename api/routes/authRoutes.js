@@ -1,7 +1,7 @@
 const express = require("express");
 const {
   studentSignUp,
-  studentSignin,
+  signIn,
   instructorSignup,
   forgotPassword,
   setNewPassword,
@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post("/student-sign-up", studentSignUp);
 router.post("/instructor-sign-up", instructorSignup);
-router.post("/sign-in", studentSignin);
+router.post("/sign-in", signIn);
 router.post("/forgot-password", forgotPassword);
 router.patch("/set-new-password", setNewPassword);
 

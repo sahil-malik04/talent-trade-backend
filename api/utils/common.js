@@ -1,7 +1,8 @@
 const CryptoJS = require("crypto-js");
+const secret = process.env.CRYPTOSECRET;
 
-const decryptPassword = (password) => {
-  var bytes = CryptoJS.AES.decrypt(password, "tt@123");
+const decryptData = (data) => {
+  var bytes = CryptoJS.AES.decrypt(data, secret);
   var originalText = bytes.toString(CryptoJS.enc.Utf8);
   return originalText;
 };
@@ -16,6 +17,6 @@ const checkEmailExist = async (key, value) => {
 };
 
 module.exports = {
-  decryptPassword,
+  decryptData,
   checkEmailExist,
 };

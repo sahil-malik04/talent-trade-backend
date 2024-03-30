@@ -1,11 +1,11 @@
 const instructor = require("../models/instructorModel");
 const student = require("../models/studentModel");
-const { decryptPassword, checkEmailExist } = require("../utils/common");
+const { decryptData, checkEmailExist } = require("../utils/common");
 const { mailTransporter } = require("../utils/mailTransporter");
 
 module.exports = {
   studentSignUpUser,
-  studentSigninUser,
+  signInUser,
   instructorSignupUser,
   forgotPasswordUser,
   setNewPasswordUser,
@@ -79,7 +79,7 @@ async function instructorSignupUser(payload) {
   });
 }
 
-async function studentSigninUser(payload) {
+async function signInUser(payload) {
   return new Promise(async function (resolve, reject) {
     try {
       const isSEmailExist = await checkEmailExist(student, payload?.email);
@@ -88,14 +88,15 @@ async function studentSigninUser(payload) {
       if (!isSEmailExist && !isIEmailExist) {
         return reject({ message: "Email doesn't exist!" });
       } else {
-        const decryptPayloadPassword = decryptPassword(payload.password);
+        const decryptPayloadPassword = decryptData(payload.password);
         let existPassword;
         if (isSEmailExist) {
           existPassword = isSEmailExist.password;
         } else {
           existPassword = isIEmailExist.password;
         }
-        if (existPassword === decryptPayloadPassword) {
+        const decryptExistingPassword = decryptData(existPassword)
+        if (decryptExistingPassword === decryptPayloadPassword) {
           return resolve({ message: "Login success!" });
         } else {
           return reject({ message: "Incorrect password" });
@@ -137,7 +138,7 @@ async function forgotPasswordUser(payload) {
         <body>
           <p>Dear ${recipientFirstName || "User"},</p>
           <p>We have received a request to set a new password for your account. To proceed, please click the link below:</p>
-          <a href="http://localhost:3000/set-new-password?email=${encodeURIComponent(
+          <a href="http://localhost:3001/set-new-password?email=${encodeURIComponent(
             recipientEmail
           )}">Set New Password</a>
           <p>Thank you,</p>
