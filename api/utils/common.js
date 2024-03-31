@@ -35,8 +35,27 @@ const generateToken = (data, duration) => {
   });
 };
 
+const verifyAuthToken = (token) => {
+  return new Promise(function (resolve, reject) {
+    try {
+      const getToken = token.split(" ")[1];
+      if (token) {
+        let decode = jwt.verify(getToken, jwtSecret);
+        if (decode) {
+          return resolve(decode);
+        }
+      } else {
+        return reject("Invalid token!");
+      }
+    } catch (err) {
+      return reject(err);
+    }
+  });
+};
+
 module.exports = {
   decryptData,
   checkEmailExist,
-  generateToken
+  generateToken,
+  verifyAuthToken,
 };

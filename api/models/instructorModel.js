@@ -39,10 +39,14 @@ const instructor = sequelize.define("instructors", {
     type: DataTypes.JSON,
     allowNull: false,
   },
+  picture: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   role: {
     type: DataTypes.INTEGER,
-    allowNull: false
-  }
+    allowNull: false,
+  },
 });
 
 // sequelize.sync({force: false}).then(() => {
