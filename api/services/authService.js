@@ -1,5 +1,6 @@
-const instructor = require("../models/instructorModel");
-const student = require("../models/studentModel");
+const instructors = require("../models/instructorModel");
+const learners = require("../models/learnerModel");
+
 const {
   decryptData,
   checkEmailExist,
@@ -8,20 +9,20 @@ const {
 const { mailTransporter } = require("../utils/mailTransporter");
 
 module.exports = {
-  studentSignUpUser,
+  learnerSignUpUser,
   signInUser,
   instructorSignupUser,
   forgotPasswordUser,
   setNewPasswordUser,
 };
 
-async function studentSignUpUser(payload) {
+async function learnerSignUpUser(payload) {
   return new Promise(async function (resolve, reject) {
     try {
-      const isSEmailExist = await checkEmailExist(student, payload?.email);
-      const isIEmailExist = await checkEmailExist(instructor, payload?.email);
+      const isLEmailExist = await checkEmailExist(learners, payload?.email);
+      const isIEmailExist = await checkEmailExist(instructors, payload?.email);
 
-      if (isSEmailExist || isIEmailExist) {
+      if (isLEmailExist || isIEmailExist) {
         return reject({ message: "Email already exist!" });
       } else {
         const data = {
@@ -36,7 +37,7 @@ async function studentSignUpUser(payload) {
           preferredTimeTo: payload?.preferredTimeTo,
           role: 2,
         };
-        const save = await student.create(data);
+        const save = await learners.create(data);
 
         if (save) {
           return resolve({
@@ -53,10 +54,10 @@ async function studentSignUpUser(payload) {
 async function instructorSignupUser(payload) {
   return new Promise(async function (resolve, reject) {
     try {
-      const isSEmailExist = await checkEmailExist(student, payload?.email);
-      const isIEmailExist = await checkEmailExist(instructor, payload?.email);
+      const isLEmailExist = await checkEmailExist(learners, payload?.email);
+      const isIEmailExist = await checkEmailExist(instructors, payload?.email);
 
-      if (isSEmailExist || isIEmailExist) {
+      if (isLEmailExist || isIEmailExist) {
         return reject({ message: "Email already exist!" });
       } else {
         const data = {
@@ -70,7 +71,7 @@ async function instructorSignupUser(payload) {
           AOE: payload?.AOE,
           role: 1,
         };
-        const save = await instructor.create(data);
+        const save = await instructors.create(data);
         if (save) {
           return resolve({
             message: "Account registered successfully",
@@ -86,28 +87,30 @@ async function instructorSignupUser(payload) {
 async function signInUser(payload) {
   return new Promise(async function (resolve, reject) {
     try {
-      const isSEmailExist = await checkEmailExist(student, payload?.email);
-      const isIEmailExist = await checkEmailExist(instructor, payload?.email);
+      const isLEmailExist = await checkEmailExist(learners, payload?.email);
+      const isIEmailExist = await checkEmailExist(instructors, payload?.email);
 
-      if (!isSEmailExist && !isIEmailExist) {
+      if (!isLEmailExist && !isIEmailExist) {
         return reject({ message: "Email doesn't exist!" });
       } else {
         const decryptPayloadPassword = decryptData(payload.password);
         let data;
         let existPassword;
-        if (isSEmailExist) {
-          existPassword = isSEmailExist.password;
+        if (isLEmailExist) {
+          existPassword = isLEmailExist.password;
           data = {
-            fullName: isSEmailExist?.firstName + "" + isSEmailExist?.lastName,
-            email: isSEmailExist?.email,
-            industry: isSEmailExist.industry,
-            branch: isSEmailExist?.branch,
-            preferredLearning: isSEmailExist?.preferredLearning,
-            role: isSEmailExist?.role,
+            id: isLEmailExist?.id,
+            fullName: isLEmailExist?.firstName + "" + isLEmailExist?.lastName,
+            email: isLEmailExist?.email,
+            industry: isLEmailExist.industry,
+            branch: isLEmailExist?.branch,
+            preferredLearning: isLEmailExist?.preferredLearning,
+            role: isLEmailExist?.role,
           };
         } else {
           existPassword = isIEmailExist.password;
           data = {
+            id: isIEmailExist?.id,
             fullName: isIEmailExist?.firstName + "" + isIEmailExist?.lastName,
             email: isIEmailExist?.email,
             industry: isIEmailExist.industry,
@@ -135,20 +138,20 @@ async function signInUser(payload) {
 async function forgotPasswordUser(payload) {
   return new Promise(async function (resolve, reject) {
     try {
-      const isSEmailExist = await checkEmailExist(student, payload?.email);
-      const isIEmailExist = await checkEmailExist(instructor, payload?.email);
+      const isLEmailExist = await checkEmailExist(learners, payload?.email);
+      const isIEmailExist = await checkEmailExist(instructors, payload?.email);
 
-      if (!isSEmailExist && !isIEmailExist) {
+      if (!isLEmailExist && !isIEmailExist) {
         return reject({
           message: "Email doesn't exist! Please check your email and try again",
         });
       } else {
-        const recipientFirstName = isSEmailExist
-          ? isSEmailExist.firstName
+        const recipientFirstName = isLEmailExist
+          ? isLEmailExist.firstName
           : isIEmailExist?.firstName;
 
-        const recipientEmail = isSEmailExist
-          ? isSEmailExist?.email
+        const recipientEmail = isLEmailExist
+          ? isLEmailExist?.email
           : isIEmailExist?.email;
 
         const htmlContent = `
@@ -177,8 +180,8 @@ async function forgotPasswordUser(payload) {
           html: htmlContent, // Attach HTML content
         };
 
-        if (isSEmailExist) {
-          mailOptions.to = isSEmailExist?.email;
+        if (isLEmailExist) {
+          mailOptions.to = isLEmailExist?.email;
         } else {
           mailOptions.to = isIEmailExist?.email;
         }
@@ -199,12 +202,12 @@ async function forgotPasswordUser(payload) {
 async function setNewPasswordUser(payload) {
   return new Promise(async function (resolve, reject) {
     try {
-      const isSEmailExist = await checkEmailExist(student, payload?.email);
-      const isIEmailExist = await checkEmailExist(instructor, payload?.email);
+      const isLEmailExist = await checkEmailExist(learners, payload?.email);
+      const isIEmailExist = await checkEmailExist(instructors, payload?.email);
 
       let update;
-      if (isSEmailExist) {
-        update = await isSEmailExist.update({ password: payload?.newPassword });
+      if (isLEmailExist) {
+        update = await isLEmailExist.update({ password: payload?.newPassword });
       } else {
         update = await isIEmailExist.update({ password: payload?.newPassword });
       }

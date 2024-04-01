@@ -1,12 +1,13 @@
-const instructors = require("../models/instructorModel");
+const meetings = require("../models/meetingsModel");
 const learners = require("../models/learnerModel");
 const { checkEmailExist } = require("../utils/common");
+const instructors = require("../models/instructorModel");
 
 module.exports = {
-  getInstructorsUser,
+  scheduleMeetingUser,
 };
 
-async function getInstructorsUser(authData) {
+async function scheduleMeetingUser(authData, payload) {
   return new Promise(async function (resolve, reject) {
     try {
       let isValidUser;
@@ -16,8 +17,16 @@ async function getInstructorsUser(authData) {
         isValidUser = await checkEmailExist(learners, authData?.email);
       }
       if (isValidUser) {
-        const getInstructors = await instructors.findAll();
-        return resolve({ message: "Success!", data: getInstructors });
+        const data = {
+          learnerId: payload.learnerId,
+          instructorId: payload.instructorId,
+        };
+        const save = await meetings.create(data);
+        if (save) {
+          return resolve({
+            message: "Your meeting has been scheduled successfully!",
+          });
+        }
       } else {
         return reject({ message: "User doesn't exist" });
       }

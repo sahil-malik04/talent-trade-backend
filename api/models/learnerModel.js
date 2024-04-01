@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 
-const student = sequelize.define("students", {
+const learners = sequelize.define("learners", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -51,10 +51,10 @@ const student = sequelize.define("students", {
 
 // sequelize.sync()
 //   .then(() => {
-//     console.log('Students table created successfully.');
+//     console.log('Learners table created successfully.');
 //   })
 //   .catch(err => {
-//     console.error('Error creating students table:', err);
+//     console.error('Error creating table:', err);
 //   });
 
-module.exports = student;
+module.exports = learners;

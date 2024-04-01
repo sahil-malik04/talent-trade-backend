@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 
-const instructor = sequelize.define("instructors", {
+const instructors = sequelize.define("instructors", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -53,7 +53,7 @@ const instructor = sequelize.define("instructors", {
 //     console.log('instructor table created successfully.');
 //   })
 //   .catch(err => {
-//     console.error('Error creating students table:', err);
+//     console.error('Error creating table:', err);
 //   });
 
-module.exports = instructor;
+module.exports = instructors;

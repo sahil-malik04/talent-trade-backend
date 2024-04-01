@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-  studentSignUp,
+  learnerSignUp,
   signIn,
   instructorSignup,
   forgotPassword,
@@ -8,7 +8,7 @@ const {
 } = require("../controllers/authController");
 const router = express.Router();
 
-router.post("/student-sign-up", studentSignUp);
+router.post("/learner-sign-up", learnerSignUp);
 router.post("/instructor-sign-up", instructorSignup);
 router.post("/sign-in", signIn);
 router.post("/forgot-password", forgotPassword);
