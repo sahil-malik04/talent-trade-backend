@@ -28,7 +28,7 @@ async function getScheduleMeetingsUser(authData) {
             {
               model: instructors,
               as: "instructor",
-              attributes: ["id", "firstName", "lastName", "email"],
+              attributes: ["id", "firstName", "lastName", "email", "AOE"],
             },
           ],
         });
