@@ -5,7 +5,7 @@ const { checkEmailExist } = require("../utils/common");
 
 module.exports = {
   getScheduleMeetingsUser,
-  scheduleMeetingUser
+  scheduleMeetingUser,
 };
 
 async function getScheduleMeetingsUser(authData) {
@@ -33,7 +33,8 @@ async function getScheduleMeetingsUser(authData) {
           ],
         });
         if (getMeetings) {
-          return resolve({ message: "Success!", data: getMeetings });
+          const sortedMeetings = getMeetings.sort((x, y) => y.createdAt - x.createdAt);
+          return resolve({ message: "Success!", data: sortedMeetings });
         }
       } else {
         return reject({ message: "User doesn't exist" });
