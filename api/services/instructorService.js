@@ -4,6 +4,7 @@ const { checkEmailExist } = require("../utils/common");
 
 module.exports = {
   getInstructorsUser,
+  getInstructorByIdUser,
 };
 
 async function getInstructorsUser(authData) {
@@ -20,6 +21,25 @@ async function getInstructorsUser(authData) {
         return resolve({ message: "Success!", data: getInstructors });
       } else {
         return reject({ message: "User doesn't exist" });
+      }
+    } catch (err) {
+      return reject({ message: "Server Error! Please try again" });
+    }
+  });
+}
+
+async function getInstructorByIdUser(authData, params) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      const getInstructor = await instructors.findOne({
+        where: {
+          id: params?.id,
+        },
+      });
+      if (getInstructor) {
+        return resolve({ message: "Success!", data: getInstructor });
+      } else {
+        return reject({ message: "Instructor doesn't exist" });
       }
     } catch (err) {
       return reject({ message: "Server Error! Please try again" });

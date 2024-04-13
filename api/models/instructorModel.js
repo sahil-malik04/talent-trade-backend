@@ -39,6 +39,18 @@ const instructors = sequelize.define("instructors", {
     type: DataTypes.JSON,
     allowNull: false,
   },
+  availableTimeFrom: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  availableTimeTo: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  hourlyCharge: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   picture: {
     type: DataTypes.STRING,
     allowNull: true,

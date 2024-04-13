@@ -69,6 +69,9 @@ async function instructorSignupUser(payload) {
           YOE: payload?.YOE,
           industry: payload?.industry,
           AOE: payload?.AOE,
+          availableTimeFrom: payload?.availableTimeFrom,
+          availableTimeTo: payload?.availableTimeTo,
+          hourlyCharge: payload?.hourlyCharge,
           role: 1,
         };
         const save = await instructors.create(data);
