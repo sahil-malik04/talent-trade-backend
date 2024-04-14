@@ -1,13 +1,14 @@
 const instructors = require("../models/instructorModel");
 const learners = require("../models/learnerModel");
+const workshops = require("../models/workshopModel");
 const { checkEmailExist } = require("../utils/common");
 
 module.exports = {
-  getInstructorsUser,
-  getInstructorByIdUser,
+  getWorshopsUser,
+  addWorshopUser,
 };
 
-async function getInstructorsUser(authData) {
+async function getWorshopsUser(authData) {
   return new Promise(async function (resolve, reject) {
     try {
       let isValidUser;
@@ -17,8 +18,8 @@ async function getInstructorsUser(authData) {
         isValidUser = await checkEmailExist(learners, authData?.email);
       }
       if (isValidUser) {
-        const getInstructors = await instructors.findAll();
-        return resolve({ message: "Success!", data: getInstructors });
+        const getData = await workshops.findAll();
+        return resolve({ message: "Success!", data: getData });
       } else {
         return reject({ message: "User doesn't exist" });
       }
@@ -28,7 +29,7 @@ async function getInstructorsUser(authData) {
   });
 }
 
-async function getInstructorByIdUser(authData, params) {
+async function addWorshopUser(authData, payload) {
   return new Promise(async function (resolve, reject) {
     try {
       let isValidUser;
@@ -38,15 +39,32 @@ async function getInstructorByIdUser(authData, params) {
         isValidUser = await checkEmailExist(learners, authData?.email);
       }
       if (isValidUser) {
-        const getInstructor = await instructors.findOne({
+        const isWorkshopExist = await workshops.findOne({
           where: {
-            id: params?.id,
+            instructorId: payload?.instructorId,
+            workshopDate: payload?.workshopDate,
+            workshopTimmings: payload?.workshopTimmings,
           },
         });
-        if (getInstructor) {
-          return resolve({ message: "Success!", data: getInstructor });
+        if (isWorkshopExist) {
+          return reject({
+            message: "Workshop already exist on specified date and time",
+          });
         } else {
-          return reject({ message: "Instructor doesn't exist" });
+          const body = {
+            instructorId: payload?.instructorId,
+            title: payload?.title,
+            subject: payload?.subject,
+            workshopDate: payload?.workshopDate,
+            workshopTimmings: payload?.workshopTimmings,
+          };
+
+          const save = await workshops.create(body);
+          if (save) {
+            return resolve({
+              message: "Workshop added successfully!",
+            });
+          }
         }
       } else {
         return reject({ message: "User doesn't exist" });
