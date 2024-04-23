@@ -1,10 +1,21 @@
-const { getScheduleMeetingsUser, scheduleMeetingUser } = require("../services/meetingService");
+const { getScheduleMeetingsUser, scheduleMeetingUser, getMeetingRequestsUser } = require("../services/meetingService");
 const { verifyAuthToken } = require("../utils/common");
 
 module.exports = {
+  getMeetingRequests,
   getScheduleMeetings,
   scheduleMeeting
 };
+
+async function getMeetingRequests(req, res) {
+  try {
+    const authData = await verifyAuthToken(req.headers?.authorization);
+    const result = await getMeetingRequestsUser(authData);
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+}
 
 async function getScheduleMeetings(req, res) {
   try {

@@ -18,7 +18,13 @@ async function getWorshopsUser(authData) {
         isValidUser = await checkEmailExist(learners, authData?.email);
       }
       if (isValidUser) {
-        const getData = await workshops.findAll();
+        const getData = await workshops.findAll({
+          include: {
+            model: instructors,
+            as: "instructor",
+            attributes: ["id", "firstName", "lastName", "email"],
+          },
+        });
         return resolve({ message: "Success!", data: getData });
       } else {
         return reject({ message: "User doesn't exist" });
@@ -57,6 +63,7 @@ async function addWorshopUser(authData, payload) {
             subject: payload?.subject,
             workshopDate: payload?.workshopDate,
             workshopTimmings: payload?.workshopTimmings,
+            duration: payload?.duration
           };
 
           const save = await workshops.create(body);

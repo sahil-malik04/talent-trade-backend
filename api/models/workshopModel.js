@@ -28,6 +28,10 @@ const workshops = sequelize.define("workshops", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  duration: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   picture: {
     type: DataTypes.STRING,
     allowNull: true,

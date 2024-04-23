@@ -12,20 +12,22 @@ const meetings = sequelize.define("meetings", {
   learnerId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    // references: {
-    //   model: learners,
-    //   key: "id"
-    // }
   },
   instructorId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    // references: {
-    //   model: instructors,
-    //   key: "id"
-    // }
+  },
+  isAccepted: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
   },
   isPaymentSuccess: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
+  isMeetingCompleted: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false,
